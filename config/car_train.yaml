@@ -1,0 +1,31 @@
+task: train
+
+batch: 0.9
+classes: null
+data: ./datasets/car_dataset_split
+device: -1
+imgsz : 1280
+
+model: yolo12s.pt
+model_name: yolo12s
+noload: false
+
+
+resume: false
+epochs: 100
+patience: 100
+save: true
+save_period: 10
+cache: false
+workers: 8
+single_cls: true
+freeze: null
+box: 7.5
+cls: 0.5
+dropout: 0.0
+
+log_level: DEBUG
+log_file: car_train.log
+
+save_file: yolo12s_car
+exist_ok: false

@@ -32,8 +32,10 @@ def init_logging(model, level=logging.INFO):
 
 def on_train_epoch_start(trainer):
     global LOG
-    LOG.debug(f'Starting epoch {trainer.epoch+1}')
+    if trainer.epoch % 10 == 0:
+        LOG.debug(f'Starting epoch {trainer.epoch+1}')
 
 def on_train_epoch_end(trainer):
     global LOG
-    LOG.debug(f'Finished epoch {trainer.epoch+1}')
+    if trainer.epoch % 10 == 0:
+        LOG.debug(f'Finished epoch {trainer.epoch+1}')
