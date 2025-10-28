@@ -165,7 +165,7 @@ def main():
     parser.add_argument("--map", "-m", required=True, help='映射字符串，例如 "[10:3, 5:7]"（old:new）')
     parser.add_argument("--labels", "-l", required=True, help="labels 文件夹路径（yolo txt 所在目录）")
     parser.add_argument("--data-yaml", "-y", required=False, default=None, help="可选：指定 data.yaml 路径（若不指定脚本会在 labels 的父目录和祖父目录尝试自动定位）")
-    parser.add_argument("--names", "-n", required=False, default=None, nargs="+", help='可选：用一个 names 列表覆盖 yaml，例如 car bike ')
+    parser.add_argument("--names", "-n", required=False, default=None, nargs="+", help='可选：用一个 names 列表覆盖 yaml，例如 B1 B2 ')
     args = parser.parse_args()
 
     mapping = parse_map_string(args.map)
