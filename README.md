@@ -6,7 +6,7 @@ main:
 
 
 split_data:
-- 从一坨数组中随机分割出val集和train集，并生成yolo格式的yaml文件
+- 从一坨数据中随机分割出val集和train集，并生成yolo格式的yaml文件
 - 给定images, labels, output, val集占比(默认为0.2), names。随机分割
 - 可以启用软链
 - 所有地址为相对datasets的地址

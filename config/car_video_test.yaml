@@ -1,0 +1,18 @@
+task: predict
+
+data: ./7.27_nanchang.mp4
+device: -1
+imgsz : 1280
+
+model: best.pt
+model_name: yolo12s_1280
+
+
+cache: false
+workers: 8
+
+log_level: DEBUG
+log_file: car_video_test.log
+
+save_file: car_video_test
+exist_ok: true
