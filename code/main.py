@@ -141,10 +141,16 @@ def predict(model):
     else :
         LOG.info('No data found')
     source = params['data']
-    results = model.predict(source=source, task = 'detect',
-                             save=True, project='runs/predict', 
-                             name=f"{params['save_file']}", 
-                             save_txt=True, exist_ok=True)
+    results = model.predict(
+        imgsz=1280,
+        source=source, 
+        task='detect',
+        save=True, 
+        project='runs/predict', 
+        name=f"{params['save_file']}", 
+        save_txt=True,
+        exist_ok=params['exist_ok'],
+        )
     LOG.info('Prediction complete')
     return results
 
