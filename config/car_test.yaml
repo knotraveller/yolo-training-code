@@ -1,18 +1,18 @@
 task: predict
 
-data: ./datasets/Untitled Project.mp4
+data: ./datasets/testset
 device: -1
 imgsz : 1280
 
 model: runs/train/yolo12s_car_finetune/weights/best.pt
-model_name: yolo12s_finetune_1280
+model_name: yolo12s_1280_finetune
 
 
 cache: false
 workers: 8
 
 log_level: DEBUG
-log_file: car_finetune_video_test
+log_file: car_finetune_val
 
-save_file: car_finetune_video_test
+save_file: car_finetune_val
 exist_ok: true

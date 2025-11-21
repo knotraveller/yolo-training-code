@@ -18,12 +18,12 @@ def split():
     # K = 5
 
     SEED = 42
-    EPOCHS = 30
-    PRETRAIN = "yolo12n.pt"  # 初始权重
+    # EPOCHS = 30
+    # PRETRAIN = "yolo12n.pt"  # 初始权重
 
     # NAMES = ["B1","B2","B3","B4","B5","BG","R1","R2","R3","R4","R5","RG"]  # 替换为你的类别名称列表
     # NAMES = ["car"]  # 替换为你的类别名称列表
-    USE_SYMLINK = True  # True: 创建符号链接（节省空间），False: 复制文件
+    # USE_SYMLINK = True  # True: 创建符号链接（节省空间），False: 复制文件
     # ---------------------------
 
     random.seed(SEED)
@@ -116,6 +116,7 @@ if __name__=='__main__':
     parser.add_argument('-o', '--output', help='Path to output directory', type=str, required=True)
     parser.add_argument('-t', '--test_size', help='Test size', type=float, default=0.2)
     parser.add_argument('-n', '--names', help='Names of classes', type=str, nargs='+', required=True)
+    parser.add_argument('-s', '--symlink', help='Use symlinks instead of copying files', action='store_true')
     args = parser.parse_args()
 
     IMG_DIR = Path("./datasets/" + args.images)
@@ -123,4 +124,5 @@ if __name__=='__main__':
     OUT_DIR = Path("./datasets/" + args.output)
     NAMES = args.names
     test_size = args.test_size
+    USE_SYMLINK = args.symlink
     split()

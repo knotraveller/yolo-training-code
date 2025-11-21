@@ -1,0 +1,19 @@
+# use the model after fine-tuning on one video dataset to test on orginal 3W dataset
+task: val
+
+data: ./datasets/car_dataset_split
+device: -1
+imgsz : 1280
+split: val
+model: runs/train/yolo12s_car_finetune/weights/best.pt
+model_name: yolo12s_finetune_1280
+
+
+cache: false
+workers: 8
+
+log_level: DEBUG
+log_file: car_finetune_5w_test
+
+save_file: car_finetune_5w_test
+exist_ok: true

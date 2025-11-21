@@ -6,8 +6,15 @@
 
 # python code/split_data.py -i "armor_dataset/images" -l "armor_dataset/labels" -o "armor_dataset_split"
 
+# python code/split_data.py \
+# -i "from_video/7.25_港科大VS新泻大学_BO2_1_0001" \
+# -l "from_video/7.25_港科大VS新泻大学_BO2_1_0001/train/labels" \
+# -o "from_video/(splited)7.25_港科大VS新泻大学_BO2_1_0001" \
+# -n car
+
 python code/split_data.py \
--i "RM2025-Armor-Public-Dataset" \
--l "RM2025-Armor-Public-Dataset" \
--o "RM2025-Armor-Public-Dataset_split" \
--n dead red blue 
+-i "car_dataset" \
+-l "car_dataset/labels000001-053796/labels" \
+-o "3W_car_dataset_split" \
+-n car \ 
+-s False

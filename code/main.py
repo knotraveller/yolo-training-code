@@ -76,30 +76,38 @@ def train(model):
     LOG.info(f'Data config: {data_config_path}')
 
     LOG.info(f'Starting training')
-    results = model.train(
-        data=data_config_path,
-        epochs=params['epochs'], 
-        patience=params['patience'],
-        batch=params['batch'],
-        imgsz = params['imgsz'],
-        save=True,
-        save_period=params['save_period'],
-        cache=params['cache'],
-        device=params['device'],
+    # results = model.train(
+    #     data=data_config_path,
+    #     epochs=params['epochs'], 
+    #     patience=params['patience'],
+    #     batch=params['batch'],
+    #     imgsz = params['imgsz'],
+    #     save=True,
+    #     save_period=params['save_period'],
+    #     cache=params['cache'],
+    #     device=params['device'],
 
-        project='runs/train',
-        name=f"{params['save_file']}",
+    #     project='runs/train',
+    #     name=f"{params['save_file']}",
 
-        exist_ok=params['exist_ok'],
-        single_cls=params['single_cls'],
-        resume=params['resume'],
-        freeze=params['freeze'],
-        box=params['box'],
-        cls=params['cls'],
-        dropout=params['dropout'],
+    #     exist_ok=params['exist_ok'],
+    #     single_cls=params['single_cls'],
+    #     resume=params['resume'],
+    #     freeze=params['freeze'],
+    #     box=params['box'],
+    #     cls=params['cls'],
+    #     dropout=params['dropout'],
 
-        plots=True,
-        )
+    #     plots=True,
+    #     hsv_s=params['hsv_s'] if 'hsv_s' in params else 0.7,
+    #     hsv_v=params['hsv_v'] if 'hsv_v' in params else 0.4,
+    #     )
+    results = model.train(cfg=config_file,
+                          data=data_config_path,
+                          save=True, 
+                          project='runs/train', 
+                          name=f"{params['save_file']}", 
+                          plots=True)
     LOG.info('Training complete')
     return results
 
@@ -111,9 +119,13 @@ def export(model):
 
 def val(model):
     LOG.info('Validating model')
+    data_config_path = os.path.join(params['data'], 'data.yaml')
+    LOG.info(f'Data config: {data_config_path}')
+
     metrics = model.val(
+        data=data_config_path,
         imgsz=params['imgsz'],
-        batch=16,
+        batch=0.8,
         save_json=True, 
         # conf=0.001,
         # iou=0.7,
@@ -121,13 +133,14 @@ def val(model):
         device=None,
         plots=True, 
         classes=params['classes'], 
-        split='test',
+        split=params['split'] if 'split' in params else 'test',
 
         project='runs/val', 
         name=f"{params['save_file']}", 
         
         workers=params['workers'],
-        visulize=True,
+        visualize=True,
+        exist_ok=params['exist_ok'],
         )
     LOG.info(f'Valid mAPs50-95: {metrics.box.maps}')
     LOG.info(f'Valid speed: {metrics.speed}')
@@ -144,12 +157,12 @@ def predict(model):
     results = model.predict(
         imgsz=1280,
         source=source, 
-        task='detect',
         save=True, 
         project='runs/predict', 
         name=f"{params['save_file']}", 
         save_txt=True,
         exist_ok=params['exist_ok'],
+        # stream=True,
         )
     LOG.info('Prediction complete')
     return results
@@ -179,14 +192,19 @@ if __name__ == '__main__':
 
     
 
-    file = pathlib.Path(f'config/{args.config}')
-    if not file.exists():
-        print(f'Config file not found: {file}, using default parameters.')
-    with open(file, 'r') as f:
+    global config_file
+    config_file = pathlib.Path(f'config/{args.config}')
+    if not config_file.exists():
+        print(f'Config file not found: {config_file}, using default parameters.')
+    with open(config_file, 'r') as f:
         config = yaml.safe_load(f)
     if config:
         params.update(config)
-    
+        
+    if 'comment' in params:
+        cmt_path = pathlib.Path(f'./runs/{params["task"]}/{params["save_file"]}/comments.txt')
+        with open(cmt_path, 'w') as f:
+            f.write(params['comment'])
     
 
     LOG = datautils.init_logging(params['log_file'], logging.DEBUG)
@@ -209,15 +227,7 @@ if __name__ == '__main__':
     params['noload'] = args.noload
     if params['device'] == None:
         params['device'] = -1 if torch.cuda.is_available() else 'cpu'
-    # params['data'] = os.path.join('./datasets', args.data)
-    # params['data_root'] = re.search(r'[^./\\]+', args.data).group(0)
-    # params['model'] = args.model if args.model else params['model']
-    # model_path = Path(params['model'])
-    # params['model_name'] = model_path.stem
-    
-    # params['epochs'] = args.epochs
-    # params['save_period'] = 10 if params['epochs'] > 50 else -1
-    # params['log_level'] = args.log_level.upper()
+
 
 
 

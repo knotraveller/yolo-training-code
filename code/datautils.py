@@ -31,11 +31,15 @@ def init_logging(model, level=logging.INFO):
     return LOG
 
 def on_train_epoch_start(trainer):
-    global LOG
-    if trainer.epoch % 10 == 0:
-        LOG.debug(f'Starting epoch {trainer.epoch+1}')
+    # global LOG
+    # if trainer.epoch % 10 == 0:
+    #     LOG.debug(f'Starting epoch {trainer.epoch+1}')
+    pass
 
 def on_train_epoch_end(trainer):
     global LOG
-    if trainer.epoch % 10 == 0:
-        LOG.debug(f'Finished epoch {trainer.epoch+1}')
+    # if trainer.epoch % 10 == 0:
+    LOG.debug(f'Finished epoch {trainer.epoch+1}' \
+              f', train_loss: {trainer.loss:.4f}' \
+              f', Current fitness: {trainer.fitness:.4f}' \
+              f', Best fitness: {trainer.best_fitness:.4f}')
