@@ -4,10 +4,12 @@ import os
 
 
 
-def init_logging(model, level=logging.INFO):
+def init_logging(log_file, level=logging.INFO):
     global LOG
+    # if os.path.exists(log_file):
+    #     os.remove(log_file)
     log_dir = './log'
-    LOGGER = model
+    LOGGER = log_file.split('.')[0] + '.log'
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
@@ -15,7 +17,7 @@ def init_logging(model, level=logging.INFO):
 
     LOG.setLevel(level)
     stream_handler = logging.StreamHandler(sys.stdout)
-    file_handler = logging.FileHandler(os.path.join(log_dir, f'{model}.log'))
+    file_handler = logging.FileHandler(os.path.join(log_dir, LOGGER))
 
     ff = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
     sf = logging.Formatter('%(name)s - %(message)s')
@@ -36,7 +38,7 @@ def on_train_epoch_start(trainer):
     #     LOG.debug(f'Starting epoch {trainer.epoch+1}')
     pass
 
-def on_train_epoch_end(trainer):
+def on_fit_epoch_end(trainer):
     global LOG
     # if trainer.epoch % 10 == 0:
     LOG.debug(f'Finished epoch {trainer.epoch+1}' \

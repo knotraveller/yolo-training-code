@@ -1,0 +1,2 @@
+version c1.0.0
+roughly trained 100 epoches on 5w-images dataset(i.g. SCAU car dataset). The accuracy on real match replay is poor, but after all its first few layers are highly likely to have strong ability to extract feature.

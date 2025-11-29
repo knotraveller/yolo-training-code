@@ -3,6 +3,7 @@ import shutil, os
 from pathlib import Path
 from sklearn.model_selection import KFold, StratifiedKFold, ShuffleSplit
 import argparse
+from tqdm import tqdm
 
 import yaml
 from ultralytics import YOLO
@@ -42,7 +43,7 @@ def split():
     ss = ShuffleSplit(n_splits=1, test_size=test_size, random_state=SEED)
 
     fold = 0
-    for train_idx, val_idx in ss.split(pairs):
+    for train_idx, val_idx in tqdm(ss.split(pairs)):
         # fold_dir = OUT_DIR / f"fold{fold}"
         fold_dir = OUT_DIR
         train_img_dir = fold_dir / "train" / "images"

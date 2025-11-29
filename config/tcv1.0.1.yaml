@@ -1,0 +1,42 @@
+# config for train car version 1.0.1
+
+task: train
+
+batch: 0.8
+classes: null
+data: ./datasets/tcv1.0.1
+device: -1
+imgsz : 1280
+
+model: models/cv1.0.0/best.pt
+model_name: cv1.0.1
+noload: false
+
+
+resume: false
+epochs: 200
+patience: 100
+save: true
+save_period: 10
+cache: false
+workers: 8
+single_cls: true
+freeze: null
+lr0: 0.01
+box: 7.5
+cls: 0.5
+dropout: 0.0
+plot: true
+hsv_s: 0.9
+hsv_v: 0.6
+
+log_level: DEBUG
+log_file: cv1.0.1.log
+
+save_file: cv1.0.1
+exist_ok: true
+
+version: cv1.0.1
+comment: |
+  car verison 1.0.1
+  As I notice the loss of cv1.0.0 is still reducing steadily, I decide to continue training with 200 epochs.

@@ -13,8 +13,8 @@
 # -n car
 
 python code/split_data.py \
--i "car_dataset" \
--l "car_dataset/labels000001-053796/labels" \
--o "3W_car_dataset_split" \
+-i "SCAU_car/images" \
+-l "SCAU_car/labels" \
+-o "SCAU_car_split" \
 -n car \ 
--s False
+-s True

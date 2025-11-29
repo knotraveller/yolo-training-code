@@ -14,6 +14,8 @@ import datautils
 
 import yaml
 import pathlib
+import shutil
+import inspect
 
 from ultralytics import YOLO
 
@@ -102,12 +104,25 @@ def train(model):
     #     hsv_s=params['hsv_s'] if 'hsv_s' in params else 0.7,
     #     hsv_v=params['hsv_v'] if 'hsv_v' in params else 0.4,
     #     )
-    results = model.train(cfg=config_file,
-                          data=data_config_path,
-                          save=True, 
-                          project='runs/train', 
-                          name=f"{params['save_file']}", 
-                          plots=True)
+    # results = model.train(cfg=config_file,
+    #                       data=data_config_path,
+    #                       save=True, 
+    #                       project='runs/train', 
+    #                       name=f"{params['save_file']}", 
+    #                       plots=True)
+    # valid = set(inspect.signature(model.train).parameters.keys())
+    train_params_path = './config/all_train_params.yaml' 
+    with open(train_params_path, 'r') as f:
+        train_params = yaml.safe_load(f)
+    filtered_params = {k: v for k, v in params.items() if k in train_params}
+    filtered_params.update({
+        'data': data_config_path,
+        'project': 'runs/train',
+        'name': f"{params['save_file']}",
+        'plots': True })
+    # print(filtered_params)
+    # train_params.update(params)
+    results = model.train(**filtered_params)
     LOG.info('Training complete')
     return results
 
@@ -200,20 +215,26 @@ if __name__ == '__main__':
         config = yaml.safe_load(f)
     if config:
         params.update(config)
-        
-    if 'comment' in params:
-        cmt_path = pathlib.Path(f'./runs/{params["task"]}/{params["save_file"]}/comments.txt')
-        with open(cmt_path, 'w') as f:
-            f.write(params['comment'])
-    
+
 
     LOG = datautils.init_logging(params['log_file'], logging.DEBUG)
     LOG.info('---------------------------')
     LOG.info('---------------------------')
-    LOG.info('---------------------------')
+    LOG.info(f'Task: {params["task"]: <6}'+'-'*15)
     LOG.info('----------STARTED----------')
     LOG.info('---------------------------')
     LOG.info('---------------------------')
+
+
+    if 'version' in params:
+        LOG.info(f'Model version: {params["version"]}')
+
+    if 'comment' in params:
+        cmt_path = Path(f'./runs/{params["task"]}/{params["save_file"]}/comments.txt')
+        if not cmt_path.parent.exists():
+            cmt_path.parent.mkdir(parents=True)
+        with open(cmt_path, 'w') as f:
+            f.write(params['comment'])
     
 
     params['task'] = args.task
@@ -231,19 +252,34 @@ if __name__ == '__main__':
 
 
 
-    LOG.info(f'Task: {params["task"]}')
+    # LOG.info(f'Task: {params["task"]}')
     LOG.info(f'Input Args: {args}\n')
     LOG.info(f'Config: {params}\n')
 
 
 
     model = init_model()
-    model.add_callback('on_train_epoch_start', datautils.on_train_epoch_start)
-    model.add_callback('on_train_epoch_end', datautils.on_train_epoch_end)
+    # model.add_callback('on_train_epoch_start', datautils.on_train_epoch_start)
+    model.add_callback('on_fit_epoch_end', datautils.on_fit_epoch_end)
 
     if params['task'] == 'train':
         train(model)
-        export(model)
+        path = Path(export(model))
+        path = path.with_suffix('.pt')
+        if not 'model_name' in params:
+            params['model_name'] = params['version'] if 'version' in params else 'unnamed'
+            
+        if not os.path.exists(f'./models/{params["model_name"]}'):
+            os.makedirs(f'./models/{params["model_name"]}')
+        shutil.copy(path, f'./models/{params["model_name"]}/best.pt')
+        # shutil.copy(model.best, f'./models/{params["model_name"]}/best.pt')
+        if 'comment' in params:
+            cmt_path = Path(f'./models/{params["model_name"]}/comments.txt')
+            if not cmt_path.parent.exists():
+                cmt_path.parent.mkdir(parents=True)
+            with open(cmt_path, 'w') as f:
+                f.write(params['comment'])
+        
 
     if params['task'] == 'val':
         val(model)

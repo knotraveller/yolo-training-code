@@ -1,0 +1,3 @@
+version c1.0.1
+This version just for test.
+over-trained(100 epoches) on 400 images from one video, which definitely overfitted. But indeed performed well on real match replay(since it is trained on it).

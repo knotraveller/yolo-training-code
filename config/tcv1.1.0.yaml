@@ -1,0 +1,42 @@
+# config for train car version 1.1.0
+
+task: train
+
+batch: 0.9
+classes: null
+data: ./datasets/from_video/(splited)7.25_港科大VS新泻大学_BO2_1_0001
+device: -1
+imgsz : 1280
+
+model: models/cv1.0.0/best.pt
+model_name: cv1.1.0
+noload: false
+
+
+resume: false
+epochs: 30
+patience: 100
+save: true
+save_period: 10
+cache: false
+workers: 8
+single_cls: true
+freeze: 9
+lr0: 0.0001
+box: 7.5
+cls: 0.5
+dropout: 0.0
+plot: true
+hsv_s: 0.9
+hsv_v: 0.6
+
+log_level: DEBUG
+log_file: cv1.1.0.log
+
+save_file: cv1.1.0
+exist_ok: true
+
+version: cv1.1.0
+comment: |
+  car verison 1.1.0
+  Rollback to model train on 5w dataset(cv1.0.0) and re-finetune it with color augumentation, freeze 10 and more conservative lr and epochs
